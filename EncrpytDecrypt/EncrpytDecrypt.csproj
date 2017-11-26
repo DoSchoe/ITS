@@ -45,11 +45,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Sources\Controllers\ControllerWorkspace.cs" />
+    <Compile Include="Sources\Controllers\IControllerWorkspace.cs" />
+    <Compile Include="Sources\Models\IModelWorkspace.cs" />
+    <Compile Include="Sources\Models\ModelWorkspace.cs" />
+    <Compile Include="Sources\Views\DialogDraftsman.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Sources\Views\DialogDraftsman.Designer.cs">
+      <DependentUpon>DialogDraftsman.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sources\Views\IViewWorkspace.cs" />
+    <Compile Include="Sources\Views\ViewWorkspace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Views\ViewWorkspace.Designer.cs">
+      <DependentUpon>ViewWorkspace.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +73,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Sources\Views\DialogDraftsman.resx">
+      <DependentUpon>DialogDraftsman.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Views\ViewWorkspace.resx">
+      <DependentUpon>ViewWorkspace.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -75,5 +92,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,7 +16,10 @@ namespace EncrpytDecrypt
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Workspace _viewWorkspace = new Workspace();
+            IModelWorkspace _modelWorkspace = ModelWorkspace.Instance;
+            IControllerWorkspace _controllerWorkspace = new ControllerWorkspace(_viewWorkspace, _modelWorkspace);
+            Application.Run(_viewWorkspace);
         }
     }
 }
