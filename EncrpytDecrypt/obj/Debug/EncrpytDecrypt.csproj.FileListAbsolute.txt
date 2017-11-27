@@ -1,6 +1,5 @@
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.csprojResolveAssemblyReference.cache
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.Properties.Resources.resources
-C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.Workspace.resources
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.csproj.GenerateResource.Cache
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.csproj.CoreCompileInputs.cache
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\bin\Debug\EncrpytDecrypt.exe.config
@@ -8,4 +7,6 @@ C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\bin\Debug\EncrpytDecrypt.exe
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\bin\Debug\EncrpytDecrypt.pdb
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.exe
 C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.pdb
-C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.DialogDraftsman.resources
+C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.ViewMain.resources
+C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.ViewWorkspace.resources
+C:\Users\Dominik\GitHub\ITS-project\EncrpytDecrypt\obj\Debug\EncrpytDecrypt.DialogAbout.resources

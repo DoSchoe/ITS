@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
-    public partial class DialogDraftsman : Form
+    public partial class DialogAbout : Form
     {
-        public DialogDraftsman()
+        public DialogAbout()
         {
             InitializeComponent();
         }

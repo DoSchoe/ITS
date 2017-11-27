@@ -10,20 +10,20 @@ using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
-    public partial class Workspace : Form,IViewWorkspace,IModelWorkspaceObserver
+    public partial class ViewWorkspace : Form,IViewWorkspace,IModelObserver
     {
         #region Members
-        private IControllerWorkspace _controller;
+        private IController _controller;
         public event ViewWorkspaceHandler<IViewWorkspace> rootpathChanged;
         #endregion
 
 
-        public Workspace()
+        public ViewWorkspace()
         {
             InitializeComponent();
         }
 
-        public void setController(IControllerWorkspace controller)
+        public void setController(IController controller)
         {
             _controller = controller;
         }
@@ -37,8 +37,7 @@ namespace EncrpytDecrypt
 
         private void bt_draftsman_Click(object sender, EventArgs e)
         {
-            DialogDraftsman draftsman = new DialogDraftsman();
-            draftsman.ShowDialog();
+            _controller.showAbout();
         }
 
         private void bt_chooseWorkspace_Click(object sender, EventArgs e)
@@ -65,6 +64,17 @@ namespace EncrpytDecrypt
         {
             rootpathChanged.Invoke(this,new ViewEventArgs(tbx_workspace.Text));
         }
+
+        private void bt_OK_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            _controller.showMain();
+        }
+
+        private void ViewWorkspace_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _controller.closeApplication();
+        }
         #endregion
 
         /// <summary>
@@ -72,7 +82,7 @@ namespace EncrpytDecrypt
         /// </summary>
         /// <param name="model"></param>
         /// <param name="e"></param>
-        public void rootpathSet(IModelWorkspace model, ModelWorkspaceEventArgs e)
+        public void rootpathSet(IModel model, ModelEventArgs e)
         {
             tbx_workspace.Text = e.newRootpath;
             bt_OK.Enabled = true;

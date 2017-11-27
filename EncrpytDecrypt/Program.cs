@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EncrpytDecrypt
@@ -16,10 +13,12 @@ namespace EncrpytDecrypt
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Workspace _viewWorkspace = new Workspace();
-            IModelWorkspace _modelWorkspace = ModelWorkspace.Instance;
-            IControllerWorkspace _controllerWorkspace = new ControllerWorkspace(_viewWorkspace, _modelWorkspace);
-            Application.Run(_viewWorkspace);
+            ViewWorkspace _viewWorkspace = new ViewWorkspace();
+            ViewMain _viewMain = new ViewMain();
+            IModel _modelWorkspace = ModelWorkspace.Instance;
+            IController _controllerWorkspace = new ControllerWorkspace(_viewWorkspace, _viewMain, _modelWorkspace);
+            _viewWorkspace.Show();
+            Application.Run();
         }
     }
 }

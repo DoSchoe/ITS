@@ -45,17 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sources\Controllers\ControllerWorkspace.cs" />
-    <Compile Include="Sources\Controllers\IControllerWorkspace.cs" />
-    <Compile Include="Sources\Models\IModelWorkspace.cs" />
-    <Compile Include="Sources\Models\ModelWorkspace.cs" />
-    <Compile Include="Sources\Views\DialogDraftsman.cs">
+    <Compile Include="Sources\Controllers\Controller.cs" />
+    <Compile Include="Sources\Controllers\IController.cs" />
+    <Compile Include="Sources\Models\IModel.cs" />
+    <Compile Include="Sources\Models\Model.cs" />
+    <Compile Include="Sources\Views\DialogAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Sources\Views\DialogDraftsman.Designer.cs">
-      <DependentUpon>DialogDraftsman.cs</DependentUpon>
+    <Compile Include="Sources\Views\DialogAbout.Designer.cs">
+      <DependentUpon>DialogAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Sources\Views\IViewWorkspace.cs" />
+    <Compile Include="Sources\Views\IView.cs" />
+    <Compile Include="Sources\Views\ViewMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sources\Views\ViewMain.Designer.cs">
+      <DependentUpon>ViewMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sources\Views\ViewWorkspace.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,8 +79,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Sources\Views\DialogDraftsman.resx">
-      <DependentUpon>DialogDraftsman.cs</DependentUpon>
+    <EmbeddedResource Include="Sources\Views\DialogAbout.resx">
+      <DependentUpon>DialogAbout.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sources\Views\ViewMain.resx">
+      <DependentUpon>ViewMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sources\Views\ViewWorkspace.resx">
       <DependentUpon>ViewWorkspace.cs</DependentUpon>

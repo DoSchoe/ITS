@@ -1,6 +1,6 @@
 ﻿namespace EncrpytDecrypt
 {
-    partial class DialogDraftsman
+    partial class DialogAbout
     {
         /// <summary>
         /// Required designer variable.
@@ -41,15 +41,15 @@
             this.lb_draftsman.TabIndex = 0;
             this.lb_draftsman.Text = "Christopher Neuwirt, S161056400x\r\nDominik Schönberger, S1610564017";
             // 
-            // DialogDraftsman
+            // DialogAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(332, 64);
             this.Controls.Add(this.lb_draftsman);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "DialogDraftsman";
-            this.Text = "Entwickler";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Name = "DialogAbout";
+            this.Text = "Developer";
             this.ResumeLayout(false);
             this.PerformLayout();
 

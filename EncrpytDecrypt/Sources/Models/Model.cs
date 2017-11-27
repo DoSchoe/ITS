@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EncrpytDecrypt
 {
-    public class ModelWorkspace:IModelWorkspace
+    public class ModelWorkspace:IModel
     {
         #region Members
         private string rootpath;
@@ -44,7 +44,7 @@ namespace EncrpytDecrypt
         #endregion
 
 
-        public void attach(IModelWorkspaceObserver imo)
+        public void attach(IModelObserver imo)
         {
             rootpathChanged += new ModelHandler<ModelWorkspace>(imo.rootpathSet);
         }
@@ -52,7 +52,7 @@ namespace EncrpytDecrypt
         public void setRootpath(string path)
         {
             rootpath = path;
-            rootpathChanged.Invoke(this, new ModelWorkspaceEventArgs(rootpath));
+            rootpathChanged.Invoke(this, new ModelEventArgs(rootpath));
         }
     }
 }

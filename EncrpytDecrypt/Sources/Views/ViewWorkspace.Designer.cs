@@ -1,6 +1,6 @@
 ﻿namespace EncrpytDecrypt
 {
-    partial class Workspace
+    partial class ViewWorkspace
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -32,7 +32,7 @@
             this.tbx_workspace = new System.Windows.Forms.TextBox();
             this.bt_chooseWorkspace = new System.Windows.Forms.Button();
             this.fbd_chooseWorkspace = new System.Windows.Forms.FolderBrowserDialog();
-            this.bt_draftsman = new System.Windows.Forms.Button();
+            this.bt_about = new System.Windows.Forms.Button();
             this.bt_OK = new System.Windows.Forms.Button();
             this.bt_new = new System.Windows.Forms.Button();
             this.bt_close = new System.Windows.Forms.Button();
@@ -41,83 +41,92 @@
             // lb_workspace
             // 
             this.lb_workspace.AutoSize = true;
-            this.lb_workspace.Location = new System.Drawing.Point(12, 15);
+            this.lb_workspace.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lb_workspace.Location = new System.Drawing.Point(14, 13);
             this.lb_workspace.Name = "lb_workspace";
-            this.lb_workspace.Size = new System.Drawing.Size(65, 13);
+            this.lb_workspace.Size = new System.Drawing.Size(72, 19);
             this.lb_workspace.TabIndex = 0;
-            this.lb_workspace.Text = "Workspace:";
+            this.lb_workspace.Text = "Directory:";
             // 
             // tbx_workspace
             // 
-            this.tbx_workspace.Location = new System.Drawing.Point(83, 12);
+            this.tbx_workspace.Location = new System.Drawing.Point(97, 14);
             this.tbx_workspace.Name = "tbx_workspace";
-            this.tbx_workspace.Size = new System.Drawing.Size(255, 20);
+            this.tbx_workspace.Size = new System.Drawing.Size(297, 23);
             this.tbx_workspace.TabIndex = 1;
             // 
             // bt_chooseWorkspace
             // 
-            this.bt_chooseWorkspace.Location = new System.Drawing.Point(344, 10);
+            this.bt_chooseWorkspace.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_chooseWorkspace.Location = new System.Drawing.Point(401, 12);
             this.bt_chooseWorkspace.Name = "bt_chooseWorkspace";
-            this.bt_chooseWorkspace.Size = new System.Drawing.Size(34, 23);
+            this.bt_chooseWorkspace.Size = new System.Drawing.Size(40, 27);
             this.bt_chooseWorkspace.TabIndex = 2;
             this.bt_chooseWorkspace.Text = "...";
             this.bt_chooseWorkspace.UseVisualStyleBackColor = true;
             this.bt_chooseWorkspace.Click += new System.EventHandler(this.bt_chooseWorkspace_Click);
             // 
-            // bt_draftsman
+            // bt_about
             // 
-            this.bt_draftsman.Location = new System.Drawing.Point(12, 42);
-            this.bt_draftsman.Name = "bt_draftsman";
-            this.bt_draftsman.Size = new System.Drawing.Size(75, 23);
-            this.bt_draftsman.TabIndex = 3;
-            this.bt_draftsman.Text = "Über...";
-            this.bt_draftsman.UseVisualStyleBackColor = true;
-            this.bt_draftsman.Click += new System.EventHandler(this.bt_draftsman_Click);
+            this.bt_about.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_about.Location = new System.Drawing.Point(14, 48);
+            this.bt_about.Name = "bt_about";
+            this.bt_about.Size = new System.Drawing.Size(87, 27);
+            this.bt_about.TabIndex = 3;
+            this.bt_about.Text = "About...";
+            this.bt_about.UseVisualStyleBackColor = true;
+            this.bt_about.Click += new System.EventHandler(this.bt_draftsman_Click);
             // 
             // bt_OK
             // 
             this.bt_OK.Enabled = false;
-            this.bt_OK.Location = new System.Drawing.Point(303, 42);
+            this.bt_OK.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_OK.Location = new System.Drawing.Point(353, 48);
             this.bt_OK.Name = "bt_OK";
-            this.bt_OK.Size = new System.Drawing.Size(75, 23);
+            this.bt_OK.Size = new System.Drawing.Size(87, 27);
             this.bt_OK.TabIndex = 3;
             this.bt_OK.Text = "OK";
             this.bt_OK.UseVisualStyleBackColor = true;
+            this.bt_OK.Click += new System.EventHandler(this.bt_OK_Click);
             // 
             // bt_new
             // 
-            this.bt_new.Location = new System.Drawing.Point(222, 42);
+            this.bt_new.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_new.Location = new System.Drawing.Point(259, 48);
             this.bt_new.Name = "bt_new";
-            this.bt_new.Size = new System.Drawing.Size(75, 23);
+            this.bt_new.Size = new System.Drawing.Size(87, 27);
             this.bt_new.TabIndex = 3;
-            this.bt_new.Text = "Neu";
+            this.bt_new.Text = "New";
             this.bt_new.UseVisualStyleBackColor = true;
             this.bt_new.Click += new System.EventHandler(this.bt_new_Click);
             // 
             // bt_close
             // 
-            this.bt_close.Location = new System.Drawing.Point(141, 42);
+            this.bt_close.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_close.Location = new System.Drawing.Point(164, 48);
             this.bt_close.Name = "bt_close";
-            this.bt_close.Size = new System.Drawing.Size(75, 23);
+            this.bt_close.Size = new System.Drawing.Size(87, 27);
             this.bt_close.TabIndex = 3;
-            this.bt_close.Text = "Schließen";
+            this.bt_close.Text = "Close";
             this.bt_close.UseVisualStyleBackColor = true;
             this.bt_close.Click += new System.EventHandler(this.bt_close_Click);
             // 
-            // Workspace
+            // ViewWorkspace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 77);
+            this.ClientSize = new System.Drawing.Size(455, 89);
             this.Controls.Add(this.bt_close);
             this.Controls.Add(this.bt_new);
             this.Controls.Add(this.bt_OK);
-            this.Controls.Add(this.bt_draftsman);
+            this.Controls.Add(this.bt_about);
             this.Controls.Add(this.bt_chooseWorkspace);
             this.Controls.Add(this.tbx_workspace);
             this.Controls.Add(this.lb_workspace);
-            this.Name = "Workspace";
-            this.Text = "Workspace wählen ...";
+            this.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Name = "ViewWorkspace";
+            this.Text = "Choose directory...";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewWorkspace_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,7 +138,7 @@
         private System.Windows.Forms.TextBox tbx_workspace;
         private System.Windows.Forms.Button bt_chooseWorkspace;
         private System.Windows.Forms.FolderBrowserDialog fbd_chooseWorkspace;
-        private System.Windows.Forms.Button bt_draftsman;
+        private System.Windows.Forms.Button bt_about;
         private System.Windows.Forms.Button bt_OK;
         private System.Windows.Forms.Button bt_new;
         private System.Windows.Forms.Button bt_close;
