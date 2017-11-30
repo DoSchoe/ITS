@@ -8,8 +8,8 @@ namespace EncrpytDecrypt
 {
     public interface IController
     {
-        void chooseWorkspace(string path);
-        void createNewWorkspace(string path);
+        //void chooseWorkspace(string path);
+        //void createNewWorkspace(string path);
         void closeApplication();
         void showMain();
         void showAbout();

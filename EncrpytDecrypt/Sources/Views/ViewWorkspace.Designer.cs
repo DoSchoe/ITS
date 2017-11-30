@@ -54,6 +54,7 @@
             this.tbx_workspace.Name = "tbx_workspace";
             this.tbx_workspace.Size = new System.Drawing.Size(297, 23);
             this.tbx_workspace.TabIndex = 1;
+            this.tbx_workspace.Leave += new System.EventHandler(this.tbx_workspace_TextChanged);
             // 
             // bt_chooseWorkspace
             // 

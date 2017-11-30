@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 
 
@@ -28,72 +29,114 @@ namespace EncrpytDecrypt
             _model = model;
             _viewWorkspace.setController(this);
             _viewMain.setController(this);
-            _model.attach((IModelObserver)_viewWorkspace);
-            _viewWorkspace.rootpathChanged += new ViewWorkspaceHandler<IViewWorkspace>(this.rootpathChanged);
+            _model.attachWorkspace((IModelObserverWorkspace)_viewWorkspace);
+            _model.attachMain((IModelObserverMain)_viewMain);
+
+            //Workspace eventhandler
+            _viewWorkspace.workspaceChanged += new ViewWorkspaceHandler<IViewWorkspace>(this.workspaceChanged);
+            _viewWorkspace.workspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.workspaceChoosed);
+            _viewWorkspace.newWorkspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.newWorkspaceChoosed);
+
         }
 
+        #region Event methods
+        #region Workspace
         /// <summary>
-        /// Triggered method if the 'rootpathChanged'-event is fired.
+        /// Triggered method if the 'workspaceChanged'-event is fired.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void rootpathChanged(IViewWorkspace sender, ViewEventArgs e)
+        private void workspaceChanged(IViewWorkspace sender, WorkspaceEventArgs e)
         {
-            chooseWorkspace(e.rootpath);
+            chooseWorkspace(e.workspacePath);
         }
+        /// <summary>
+        /// Triggered method if the 'workspaceChoosed'-event is fired.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void workspaceChoosed(IViewWorkspace sender, WorkspaceEventArgs e)
+        {
+            chooseWorkspace(e.workspacePath);
+        }
+        /// <summary>
+        /// Triggered method if the 'newWorkspaceChoosed'-event is fired.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newWorkspaceChoosed(IViewWorkspace sender, WorkspaceEventArgs e)
+        {
+            createNewWorkspace(e.workspacePath);
+        }
+        #endregion
+        #endregion
 
+        #region General methods
         /// <summary>
         /// Shows the main view.
         /// </summary>
         public void showMain()
         {
+            checkPublicKeyFile();
             _viewMain.showMe();
         }
-
+        /// <summary>
+        /// Shows the 'About'-dialog
+        /// </summary>
         public void showAbout()
         {
             new DialogAbout().ShowDialog();
         }
-
         /// <summary>
-        /// Checks whether the specified path is a suitable directory.
+        /// Close the application
         /// </summary>
-        /// <param name="path"></param>
-        public void chooseWorkspace(string path)
+        public void closeApplication()
         {
-            DirectoryInfo rootFolder = new DirectoryInfo(path);
-            int isChecked = checkWorkspace(rootFolder);
-            if (0 == isChecked)
+            Application.Exit();
+        }
+        #endregion
+
+        private void checkPublicKeyFile()
+        {
+            string keypath = _model.getWorkspacePath() + "\\" + templateFolders[3];
+            DirectoryInfo key = new DirectoryInfo(keypath);
+            FileInfo[] rsaPublicKeyFiles = key.GetFiles("rsaPublicKey*.txt");
+            int keyCount = rsaPublicKeyFiles.Length;
+            if (1 <= keyCount)
             {
-                _model.setRootpath(path);
-            }
-            else if(1 == isChecked)
-            {
-                DialogResult newWorkspace = MessageBox.Show("Ordner ist leer.\nWollen Sie die notwendige Ordnerstruktur anlegen?", "Neuen Workspace anlegen?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (DialogResult.Yes == newWorkspace)
-                {
-                    createWorkspace(rootFolder);
-                    _model.setRootpath(path);
-                }
+                //CspParameters cspp = new CspParameters();
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                StreamReader sr = new StreamReader(rsaPublicKeyFiles[0].FullName);
+                //cspp.KeyContainerName = rsaPublicKeyFiles[0].Name.Split('.')[0];
+                //rsa = new RSACryptoServiceProvider(cspp);
+                string keytxt = sr.ReadToEnd();
+                rsa.FromXmlString(keytxt);
+                //rsa.PersistKeyInCsp = true;
+                rsa.PersistKeyInCsp = false;
+                sr.Close();
+
+                //_model.setRSAkeys(rsa.ExportParameters(false), "Public RSA-key loaded");
             }
             else
             {
-                MessageBox.Show("Falsche Ordnerstruktur!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //_viewMain.updateLog("No Public key loaded");
             }
         }
 
+        #region Private methods
+        #region Workspace methods
         /// <summary>
         /// Checks whether a directory can be created in the specified path.
         /// </summary>
         /// <param name="path"></param>
-        public void createNewWorkspace(string path)
+        private void createNewWorkspace(string path)
         {
             DirectoryInfo rootFolder = new DirectoryInfo(path);
             int isChecked = checkWorkspace(rootFolder);
             if (1 == isChecked)
             {
                 createWorkspace(rootFolder);
-                _model.setRootpath(path);
+                _model.setWorkspacePath(path);
             }
             else if (0 == isChecked)
             {
@@ -103,24 +146,42 @@ namespace EncrpytDecrypt
                         "Workspace verwenden?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (DialogResult.Yes == existingWorkspace)
                 {
-                    _model.setRootpath(path);
+                    _model.setWorkspacePath(path);
                 }
             }
             else
             {
                 MessageBox.Show("Falsche Ordnerstruktur!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _model.setWorkspacePath(null);
             }
         }
-
         /// <summary>
-        /// Close the application
+        /// Checks whether the specified path is a suitable directory.
         /// </summary>
-        public void closeApplication()
+        /// <param name="path"></param>
+        private void chooseWorkspace(string path)
         {
-            Application.Exit();
+            DirectoryInfo rootFolder = new DirectoryInfo(path);
+            int isChecked = checkWorkspace(rootFolder);
+            if (0 == isChecked)
+            {
+                _model.setWorkspacePath(path);
+            }
+            else if (1 == isChecked)
+            {
+                DialogResult newWorkspace = MessageBox.Show("Ordner ist leer.\nWollen Sie die notwendige Ordnerstruktur anlegen?", "Neuen Workspace anlegen?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (DialogResult.Yes == newWorkspace)
+                {
+                    createWorkspace(rootFolder);
+                    _model.setWorkspacePath(path);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Falsche Ordnerstruktur!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _model.setWorkspacePath(null);
+            }
         }
-
-        #region Private methods
         /// <summary>
         /// Checks the subfolders of the root folder
         /// </summary>
@@ -172,6 +233,8 @@ namespace EncrpytDecrypt
                 Directory.CreateDirectory(newFolder);
             }            
         }
+        #endregion
+
         #endregion
     }
 }

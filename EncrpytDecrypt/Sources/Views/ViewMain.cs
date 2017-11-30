@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
-    public partial class ViewMain : Form,IViewMain
+    public partial class ViewMain : Form,IViewMain,IModelObserverMain
     {
         #region Members
         private IController _controller;
@@ -39,6 +39,10 @@ namespace EncrpytDecrypt
         }
 
         #region Form events
+        private void bt_close_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
         private void ViewMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             _controller.closeApplication();
@@ -49,5 +53,15 @@ namespace EncrpytDecrypt
             _controller.showAbout();
         }
         #endregion
+
+        /// <summary>
+        /// Log-file Observer for the model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="e"></param>
+        public void logUpdated(IModel model, ModelEventArgs e)
+        {
+            tbx_logFile.AppendText(e.value + "\n");
+        }
     }
 }

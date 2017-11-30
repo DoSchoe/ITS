@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Cryptography;
 
 namespace EncrpytDecrypt
 {
-    public class ModelWorkspace:IModel
+    public class Model:IModel
     {
         #region Members
-        private string rootpath;
-        public event ModelHandler<ModelWorkspace> rootpathChanged;
+        private string workspacePath;
+        private RSAParameters rsaKeys;
+        public event ModelHandler<Model> worksapceChanged;
+        public event ModelHandler<Model> enableButtons; 
         #endregion
 
         #region Singleton-Implementierung
         /// <summary>
         /// Declaration of the singelton
         /// </summary>
-        private static ModelWorkspace _singleton = null;
+        private static Model _singleton = null;
 
         /// <summary>
         /// Method for creating or sending back the singelton instance of MainForm
         /// </summary>
-        public static ModelWorkspace Instance
+        public static Model Instance
         {
             get
             {
                 if (_singleton == null)
                 {
-                    _singleton = new ModelWorkspace();
+                    _singleton = new Model();
                 }
                 return _singleton;
             }
@@ -37,22 +35,39 @@ namespace EncrpytDecrypt
         /// <summary>
         /// CTor
         /// </summary>
-        private ModelWorkspace()
+        private Model()
         {
-            rootpath = "";
+            workspacePath = "";
         }
         #endregion
 
 
-        public void attach(IModelObserver imo)
+        public void attachWorkspace(IModelObserverWorkspace imo)
         {
-            rootpathChanged += new ModelHandler<ModelWorkspace>(imo.rootpathSet);
+            worksapceChanged += new ModelHandler<Model>(imo.workspaceSet);
+            enableButtons += new ModelHandler<Model>(imo.enableOK);
+        }
+        public void attachMain(IModelObserverMain imo)
+        {
         }
 
-        public void setRootpath(string path)
+        public void setWorkspacePath(string path)
         {
-            rootpath = path;
-            rootpathChanged.Invoke(this, new ModelEventArgs(rootpath));
+            if (path == null)
+            {
+                workspacePath = "";
+            }
+            else
+            {
+                workspacePath = path;
+                enableButtons.Invoke(this,null);
+            }
+            worksapceChanged.Invoke(this, new ModelEventArgs(workspacePath));
+        }
+
+        public string getWorkspacePath()
+        {
+            return workspacePath;
         }
     }
 }

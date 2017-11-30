@@ -35,8 +35,8 @@
             this.lb_fileHandling = new System.Windows.Forms.Label();
             this.bt_encrypt = new System.Windows.Forms.Button();
             this.bt_decrypt = new System.Windows.Forms.Button();
-            this.bt_clearRoot = new System.Windows.Forms.Button();
             this.bt_close = new System.Windows.Forms.Button();
+            this.bt_clearRoot = new System.Windows.Forms.Button();
             this.tbx_logFile = new System.Windows.Forms.TextBox();
             this.lb_logFile = new System.Windows.Forms.Label();
             this.bt_about = new System.Windows.Forms.Button();
@@ -105,6 +105,7 @@
             // bt_exportPublicRsaKey
             // 
             this.bt_exportPublicRsaKey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bt_exportPublicRsaKey.Enabled = false;
             this.bt_exportPublicRsaKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_exportPublicRsaKey.Location = new System.Drawing.Point(261, 28);
             this.bt_exportPublicRsaKey.Name = "bt_exportPublicRsaKey";
@@ -129,6 +130,7 @@
             // bt_encrypt
             // 
             this.bt_encrypt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bt_encrypt.Enabled = false;
             this.bt_encrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_encrypt.ForeColor = System.Drawing.Color.Red;
             this.bt_encrypt.Location = new System.Drawing.Point(3, 100);
@@ -141,6 +143,7 @@
             // bt_decrypt
             // 
             this.bt_decrypt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bt_decrypt.Enabled = false;
             this.bt_decrypt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_decrypt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.bt_decrypt.Location = new System.Drawing.Point(261, 100);
@@ -149,17 +152,6 @@
             this.bt_decrypt.TabIndex = 4;
             this.bt_decrypt.Text = "Decrypt a file";
             this.bt_decrypt.UseVisualStyleBackColor = true;
-            // 
-            // bt_clearRoot
-            // 
-            this.bt_clearRoot.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bt_clearRoot.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bt_clearRoot.Location = new System.Drawing.Point(3, 147);
-            this.bt_clearRoot.Name = "bt_clearRoot";
-            this.bt_clearRoot.Size = new System.Drawing.Size(223, 29);
-            this.bt_clearRoot.TabIndex = 5;
-            this.bt_clearRoot.Text = "Clear all files";
-            this.bt_clearRoot.UseVisualStyleBackColor = true;
             // 
             // bt_close
             // 
@@ -171,6 +163,18 @@
             this.bt_close.TabIndex = 6;
             this.bt_close.Text = "Close";
             this.bt_close.UseVisualStyleBackColor = true;
+            this.bt_close.Click += new System.EventHandler(this.bt_close_Click);
+            // 
+            // bt_clearRoot
+            // 
+            this.bt_clearRoot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bt_clearRoot.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.bt_clearRoot.Location = new System.Drawing.Point(3, 147);
+            this.bt_clearRoot.Name = "bt_clearRoot";
+            this.bt_clearRoot.Size = new System.Drawing.Size(223, 29);
+            this.bt_clearRoot.TabIndex = 5;
+            this.bt_clearRoot.Text = "Clear all files";
+            this.bt_clearRoot.UseVisualStyleBackColor = true;
             // 
             // tbx_logFile
             // 

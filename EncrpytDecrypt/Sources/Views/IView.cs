@@ -16,7 +16,9 @@ namespace EncrpytDecrypt
     /// </summary>
     public interface IViewWorkspace:IView
     {
-        event ViewWorkspaceHandler<IViewWorkspace> rootpathChanged;
+        event ViewWorkspaceHandler<IViewWorkspace> workspaceChanged;
+        event ViewWorkspaceHandler<IViewWorkspace> workspaceChoosed;
+        event ViewWorkspaceHandler<IViewWorkspace> newWorkspaceChoosed;
     }
     /// <summary>
     /// Eventhandler for the workspace view
@@ -24,7 +26,7 @@ namespace EncrpytDecrypt
     /// <typeparam name="IViewWorkspace"></typeparam>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public delegate void ViewWorkspaceHandler<IViewWorkspace>(IViewWorkspace sender, ViewEventArgs e);
+    public delegate void ViewWorkspaceHandler<IViewWorkspace>(IViewWorkspace sender, WorkspaceEventArgs e);
     #endregion
 
     #region Main view
@@ -34,29 +36,19 @@ namespace EncrpytDecrypt
     public interface IViewMain:IView
     {
         void showMe();
-        //event ViewMainHandler<IViewMain> rootpathChanged;
     }
-    /// <summary>
-    /// Eventhandler for the main view
-    /// </summary>
-    /// <typeparam name="IViewMain"></typeparam>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    public delegate void ViewMainHandler<IViewMain>(IViewMain sender, ViewEventArgs e);
     #endregion
 
     /// <summary>
     /// Eventarguments for the views
     /// </summary>
-    public class ViewEventArgs : EventArgs
+    public class WorkspaceEventArgs : EventArgs
     {
-        public string rootpath;
+        public string workspacePath;
 
-        public ViewEventArgs(string newPath)
+        public WorkspaceEventArgs(string newPath)
         {
-            rootpath = newPath;
+            workspacePath = newPath;
         }
     }
-
-    
 }

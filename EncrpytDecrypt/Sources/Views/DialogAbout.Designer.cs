@@ -39,7 +39,7 @@
             this.lb_draftsman.Name = "lb_draftsman";
             this.lb_draftsman.Size = new System.Drawing.Size(303, 40);
             this.lb_draftsman.TabIndex = 0;
-            this.lb_draftsman.Text = "Christopher Neuwirt, S161056400x\r\nDominik Schönberger, S1610564017";
+            this.lb_draftsman.Text = "Christopher Neuwirt, S1610564013\r\nDominik Schönberger, S1610564017";
             // 
             // DialogAbout
             // 

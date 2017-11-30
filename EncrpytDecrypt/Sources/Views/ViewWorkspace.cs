@@ -1,52 +1,61 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
-    public partial class ViewWorkspace : Form,IViewWorkspace,IModelObserver
+    public partial class ViewWorkspace : Form,IViewWorkspace,IModelObserverWorkspace
     {
         #region Members
         private IController _controller;
-        public event ViewWorkspaceHandler<IViewWorkspace> rootpathChanged;
+        public event ViewWorkspaceHandler<IViewWorkspace> workspaceChanged;
+        public event ViewWorkspaceHandler<IViewWorkspace> workspaceChoosed;
+        public event ViewWorkspaceHandler<IViewWorkspace> newWorkspaceChoosed;
         #endregion
-
 
         public ViewWorkspace()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Sets the controller for the view
+        /// </summary>
+        /// <param name="controller"></param>
         public void setController(IController controller)
         {
             _controller = controller;
         }
 
         #region Form-Events
+        #region General events
         private void bt_close_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-        
-
+        private void ViewWorkspace_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _controller.closeApplication();
+        }
         private void bt_draftsman_Click(object sender, EventArgs e)
         {
             _controller.showAbout();
         }
+        private void bt_OK_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            _controller.showMain();
+        }
+        #endregion
 
+        #region Workspace events
         private void bt_chooseWorkspace_Click(object sender, EventArgs e)
         {
             fbd_chooseWorkspace.ShowNewFolderButton = false;
             DialogResult result = fbd_chooseWorkspace.ShowDialog();
             if (result == DialogResult.OK)
             {
-                _controller.chooseWorkspace(fbd_chooseWorkspace.SelectedPath);
+                workspaceChoosed.Invoke(this, new WorkspaceEventArgs(fbd_chooseWorkspace.SelectedPath));
+                //_controller.chooseWorkspace(fbd_chooseWorkspace.SelectedPath);
             }
         }
 
@@ -56,36 +65,32 @@ namespace EncrpytDecrypt
             DialogResult result = fbd_chooseWorkspace.ShowDialog();
             if (result == DialogResult.OK)
             {
-                _controller.createNewWorkspace(fbd_chooseWorkspace.SelectedPath);
+                newWorkspaceChoosed.Invoke(this, new WorkspaceEventArgs(fbd_chooseWorkspace.SelectedPath));
+                //_controller.createNewWorkspace(fbd_chooseWorkspace.SelectedPath);
             }
         }
 
         private void tbx_workspace_TextChanged(object sender, EventArgs e)
         {
-            rootpathChanged.Invoke(this,new ViewEventArgs(tbx_workspace.Text));
-        }
-
-        private void bt_OK_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            _controller.showMain();
-        }
-
-        private void ViewWorkspace_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            _controller.closeApplication();
+            workspaceChanged.Invoke(this,new WorkspaceEventArgs(tbx_workspace.Text));
         }
         #endregion
+        #endregion
 
+        #region Observer
         /// <summary>
-        /// Observer for the model
+        /// Workspace observer for the model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="e"></param>
-        public void rootpathSet(IModel model, ModelEventArgs e)
+        public void workspaceSet(IModel model, ModelEventArgs e)
         {
-            tbx_workspace.Text = e.newRootpath;
+            tbx_workspace.Text = e.value;
+        }
+        public void enableOK(IModel model, ModelEventArgs e)
+        {
             bt_OK.Enabled = true;
-        } 
+        }
+        #endregion
     }
 }
