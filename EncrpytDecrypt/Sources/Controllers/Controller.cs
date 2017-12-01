@@ -74,6 +74,7 @@ namespace EncrpytDecrypt
             createNewWorkspace(e.workspacePath);
         }
         #endregion
+
         #region Main
         /// <summary>
         /// Triggered method if the 'createRsaKeys'-event is fired.
@@ -119,33 +120,6 @@ namespace EncrpytDecrypt
             Application.Exit();
         }
         #endregion
-
-        private void checkPublicKeyFile()
-        {
-            string keypath = _model.getWorkspacePath() + "\\" + templateFolders[3];
-            DirectoryInfo key = new DirectoryInfo(keypath);
-            FileInfo[] rsaPublicKeyFiles = key.GetFiles("rsaPublicKey*.txt");
-            int keyCount = rsaPublicKeyFiles.Length;
-            if (1 <= keyCount)
-            {
-                //CspParameters cspp = new CspParameters();
-                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                StreamReader sr = new StreamReader(rsaPublicKeyFiles[0].FullName);
-                //cspp.KeyContainerName = rsaPublicKeyFiles[0].Name.Split('.')[0];
-                //rsa = new RSACryptoServiceProvider(cspp);
-                string keytxt = sr.ReadToEnd();
-                rsa.FromXmlString(keytxt);
-                //rsa.PersistKeyInCsp = true;
-                rsa.PersistKeyInCsp = false;
-                sr.Close();
-
-                //_model.setRSAkeys(rsa.ExportParameters(false), "Public RSA-key loaded");
-            }
-            else
-            {
-                //_viewMain.updateLog("No Public key loaded");
-            }
-        }
 
         #region Private methods
         #region Workspace methods
@@ -256,6 +230,32 @@ namespace EncrpytDecrypt
                 string newFolder = root.FullName + "\\" + foldername;
                 Directory.CreateDirectory(newFolder);
             }            
+        }
+
+        /// <summary>
+        /// Checks if a file with the public RSA-key exists and loads it
+        /// </summary>
+        private void checkPublicKeyFile()
+        {
+            string keypath = _model.getWorkspacePath() + "\\" + templateFolders[3];
+            DirectoryInfo key = new DirectoryInfo(keypath);
+            FileInfo[] rsaPublicKeyFiles = key.GetFiles("rsaPublicKey*.txt");
+            int keyCount = rsaPublicKeyFiles.Length;
+            if (1 <= keyCount)
+            {
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+                StreamReader sr = new StreamReader(rsaPublicKeyFiles.Last().FullName);
+                string keytxt = sr.ReadToEnd();
+                rsa.FromXmlString(keytxt);
+                //rsa.PersistKeyInCsp = true;
+                rsa.PersistKeyInCsp = false;
+                sr.Close();
+                _model.loadPublicRsaKey(rsa);
+            }
+            else
+            {
+                _viewMain.updateLogFile("No Public key loaded");
+            }
         }
         #endregion
 

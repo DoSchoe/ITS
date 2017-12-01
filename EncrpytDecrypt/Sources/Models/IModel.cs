@@ -13,6 +13,7 @@ namespace EncrpytDecrypt
         void setWorkspacePath(string path);
         string getWorkspacePath();
         void setRsaKeys(RSACryptoServiceProvider keys);
+        void loadPublicRsaKey(RSACryptoServiceProvider key);
         RSACryptoServiceProvider getRsaKeys();
     }
 
@@ -38,6 +39,7 @@ namespace EncrpytDecrypt
     {
         void rsaKeysCreated(IModel model, ModelEventArgs e);
         void logUpdated(IModel model, ModelEventArgs e);
+        void publicRsaKeyLoaded(IModel model, ModelEventArgs e);
     }
     #endregion
 

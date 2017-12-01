@@ -86,6 +86,12 @@ namespace EncrpytDecrypt
             bt_decrypt.Enabled = true;
             bt_encrypt.Enabled = true;
         }
+
+        public void publicRsaKeyLoaded(IModel model, ModelEventArgs e)
+        {
+            bt_decrypt.Enabled = true;
+            bt_encrypt.Enabled = true;
+        }
         #endregion
 
         public void updateLogFile(string msg)
