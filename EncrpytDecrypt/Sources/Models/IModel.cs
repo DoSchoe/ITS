@@ -12,6 +12,8 @@ namespace EncrpytDecrypt
         void attachMain(IModelObserverMain imo);
         void setWorkspacePath(string path);
         string getWorkspacePath();
+        void setRsaKeys(RSACryptoServiceProvider keys);
+        RSACryptoServiceProvider getRsaKeys();
     }
 
     #region Observers
@@ -34,6 +36,7 @@ namespace EncrpytDecrypt
     /// </summary>
     public interface IModelObserverMain : IModelObserver
     {
+        void rsaKeysCreated(IModel model, ModelEventArgs e);
         void logUpdated(IModel model, ModelEventArgs e);
     }
     #endregion

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
@@ -36,7 +37,11 @@ namespace EncrpytDecrypt
     public interface IViewMain:IView
     {
         void showMe();
+        void updateLogFile(string msg);
+        event ViewMainHandler<IViewMain> createRsaKeys;
+        event ViewMainHandler<IViewMain> exportRsaKey;
     }
+    public delegate void ViewMainHandler<IViewMain>(IViewMain sender, EventArgs e);
     #endregion
 
     /// <summary>

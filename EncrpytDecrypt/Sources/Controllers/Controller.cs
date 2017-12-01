@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
@@ -37,6 +38,10 @@ namespace EncrpytDecrypt
             _viewWorkspace.workspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.workspaceChoosed);
             _viewWorkspace.newWorkspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.newWorkspaceChoosed);
 
+            //Mein eventhandler
+            _viewMain.createRsaKeys += new ViewMainHandler<IViewMain>(this.createRsaKeys);
+            _viewMain.exportRsaKey += new ViewMainHandler<IViewMain>(this.exportRsaKey);
+
         }
 
         #region Event methods
@@ -67,6 +72,25 @@ namespace EncrpytDecrypt
         private void newWorkspaceChoosed(IViewWorkspace sender, WorkspaceEventArgs e)
         {
             createNewWorkspace(e.workspacePath);
+        }
+        #endregion
+        #region Main
+        /// <summary>
+        /// Triggered method if the 'createRsaKeys'-event is fired.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void createRsaKeys(IViewMain sender, EventArgs e)
+        {
+            createRsaKeys();
+        }
+
+        private void exportRsaKey(IViewMain sender, EventArgs e)
+        {
+            if (true == exportPublicRsaKey())
+            {
+                _viewMain.updateLogFile("Public RSA key exportet.");
+            }
         }
         #endregion
         #endregion
@@ -235,6 +259,36 @@ namespace EncrpytDecrypt
         }
         #endregion
 
+        #region Main methods
+        private void createRsaKeys()
+        {
+            RSACryptoServiceProvider rsa;
+            rsa = new RSACryptoServiceProvider();
+            rsa.PersistKeyInCsp = false;
+            _model.setRsaKeys(rsa);
+        }
+
+        private bool exportPublicRsaKey()
+        {
+            try
+            {
+                string keypath = _model.getWorkspacePath() + "\\" + templateFolders[3];
+                DirectoryInfo key = new DirectoryInfo(keypath);
+                int savedPublicKeys = key.GetFiles("rsaPublicKey*.txt").Length;
+                string fullFileName = keypath + "\\" + "rsaPublicKey" + savedPublicKeys + ".txt";
+                RSACryptoServiceProvider rsa = _model.getRsaKeys();
+                StreamWriter sw = new StreamWriter(fullFileName, false);
+                sw.Write(rsa.ToXmlString(false));
+                sw.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error", e.Message, MessageBoxButtons.AbortRetryIgnore);
+                return false;
+            }
+        }
+        #endregion
         #endregion
     }
 }

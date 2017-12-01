@@ -6,9 +6,10 @@ namespace EncrpytDecrypt
     {
         #region Members
         private string workspacePath;
-        private RSAParameters rsaKeys;
+        private RSACryptoServiceProvider rsaKeys;
         public event ModelHandler<Model> worksapceChanged;
-        public event ModelHandler<Model> enableButtons; 
+        public event ModelHandler<Model> enableWorkspaceButtons;
+        public event ModelHandler<Model> rsaKeysCreated; 
         #endregion
 
         #region Singleton-Implementierung
@@ -41,14 +42,15 @@ namespace EncrpytDecrypt
         }
         #endregion
 
-
         public void attachWorkspace(IModelObserverWorkspace imo)
         {
             worksapceChanged += new ModelHandler<Model>(imo.workspaceSet);
-            enableButtons += new ModelHandler<Model>(imo.enableOK);
+            enableWorkspaceButtons += new ModelHandler<Model>(imo.enableOK);
         }
         public void attachMain(IModelObserverMain imo)
         {
+            rsaKeysCreated += new ModelHandler<Model>(imo.rsaKeysCreated);
+            rsaKeysCreated += new ModelHandler<Model>(imo.logUpdated);
         }
 
         public void setWorkspacePath(string path)
@@ -60,14 +62,25 @@ namespace EncrpytDecrypt
             else
             {
                 workspacePath = path;
-                enableButtons.Invoke(this,null);
+                enableWorkspaceButtons.Invoke(this,null);
             }
             worksapceChanged.Invoke(this, new ModelEventArgs(workspacePath));
+        }
+
+        public void setRsaKeys(RSACryptoServiceProvider keys)
+        {
+            rsaKeys = keys;
+            rsaKeysCreated.Invoke(this, new ModelEventArgs("RSA keys (public & private) created"));
         }
 
         public string getWorkspacePath()
         {
             return workspacePath;
+        }
+
+        public RSACryptoServiceProvider getRsaKeys()
+        {
+            return rsaKeys;
         }
     }
 }

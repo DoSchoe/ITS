@@ -72,7 +72,10 @@ namespace EncrpytDecrypt
 
         private void tbx_workspace_TextChanged(object sender, EventArgs e)
         {
-            workspaceChanged.Invoke(this,new WorkspaceEventArgs(tbx_workspace.Text));
+            if (!String.IsNullOrEmpty(tbx_workspace.Text))
+            {
+                workspaceChanged.Invoke(this, new WorkspaceEventArgs(tbx_workspace.Text));
+            }
         }
         #endregion
         #endregion

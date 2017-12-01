@@ -14,6 +14,8 @@ namespace EncrpytDecrypt
     {
         #region Members
         private IController _controller;
+        public event ViewMainHandler<IViewMain> createRsaKeys;
+        public event ViewMainHandler<IViewMain> exportRsaKey; 
         #endregion
 
         public ViewMain()
@@ -39,6 +41,7 @@ namespace EncrpytDecrypt
         }
 
         #region Form events
+        #region General events
         private void bt_close_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -54,14 +57,40 @@ namespace EncrpytDecrypt
         }
         #endregion
 
+        #region Main events
+        private void bt_createRsaKeys_Click(object sender, EventArgs e)
+        {
+            createRsaKeys.Invoke(this, null);
+        }
+        private void bt_exportPublicRsaKey_Click(object sender, EventArgs e)
+        {
+            exportRsaKey.Invoke(this, null);
+        }
+        #endregion
+        #endregion
+
+        #region Observers
         /// <summary>
-        /// Log-file Observer for the model
+        /// Main view observer for the model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="e"></param>
         public void logUpdated(IModel model, ModelEventArgs e)
         {
             tbx_logFile.AppendText(e.value + "\n");
+        }
+
+        public void rsaKeysCreated(IModel model, ModelEventArgs e)
+        {
+            bt_exportPublicRsaKey.Enabled = true;
+            bt_decrypt.Enabled = true;
+            bt_encrypt.Enabled = true;
+        }
+        #endregion
+
+        public void updateLogFile(string msg)
+        {
+            tbx_logFile.AppendText(msg + "\n");
         }
     }
 }

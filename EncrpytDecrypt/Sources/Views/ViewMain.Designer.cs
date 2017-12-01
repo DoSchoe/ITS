@@ -101,6 +101,7 @@
             this.bt_createRsaKeys.TabIndex = 1;
             this.bt_createRsaKeys.Text = "Create asym. RSA-keys";
             this.bt_createRsaKeys.UseVisualStyleBackColor = true;
+            this.bt_createRsaKeys.Click += new System.EventHandler(this.bt_createRsaKeys_Click);
             // 
             // bt_exportPublicRsaKey
             // 
@@ -113,6 +114,7 @@
             this.bt_exportPublicRsaKey.TabIndex = 2;
             this.bt_exportPublicRsaKey.Text = "Export public RSA-key";
             this.bt_exportPublicRsaKey.UseVisualStyleBackColor = true;
+            this.bt_exportPublicRsaKey.Click += new System.EventHandler(this.bt_exportPublicRsaKey_Click);
             // 
             // lb_fileHandling
             // 
