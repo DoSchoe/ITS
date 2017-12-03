@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -41,6 +42,7 @@ namespace EncrpytDecrypt
             //Mein eventhandler
             _viewMain.createRsaKeys += new ViewMainHandler<IViewMain>(this.createRsaKeys);
             _viewMain.exportRsaKey += new ViewMainHandler<IViewMain>(this.exportRsaKey);
+            _viewMain.encryptFile += new FileHandler<IViewMain>(this.encryptFile);
 
         }
 
@@ -91,6 +93,14 @@ namespace EncrpytDecrypt
             if (true == exportPublicRsaKey())
             {
                 _viewMain.updateLogFile("Public RSA key exportet.");
+            }
+        }
+
+        private void encryptFile(IViewMain sender, FileEventArgs e)
+        {
+            if (true == encryption(e.filePath))
+            {
+                _viewMain.updateLogFile("File encrypted!");
             }
         }
         #endregion
@@ -268,6 +278,52 @@ namespace EncrpytDecrypt
             _model.setRsaKeys(rsa);
         }
 
+        private RijndaelManaged createSymKey()
+        {
+            RijndaelManaged symKey = new RijndaelManaged();
+            symKey.KeySize = 256;
+            symKey.BlockSize = 256;
+            symKey.Mode = CipherMode.CBC;
+
+            return symKey;
+        }
+
+        private FileInfo copyFile(string filePath)
+        {
+            FileInfo actualFile = new FileInfo(filePath);
+            string targetFilePath = _model.getWorkspacePath() + "\\" + templateFolders[0];
+
+            if (actualFile.DirectoryName != targetFilePath)
+            {
+                string targetFilename = targetFilePath + "\\" + actualFile.Name;
+                File.Copy(filePath, targetFilename, true);
+                return new FileInfo(targetFilename);
+            }
+            else
+            {
+                return new FileInfo(filePath);
+            }
+        }
+
+        private string createEncryptedFilenname(string original)
+        {
+            FileInfo plainFile = new FileInfo(original);
+            int lengthFilename = plainFile.Name.LastIndexOf(".");
+            string encryptedFilename = plainFile.Name.Substring(0, lengthFilename) + ".enc";
+            string encryptedFullFilename =
+                _model.getWorkspacePath() + "\\" + templateFolders[1] + "\\" + encryptedFilename;
+            return encryptedFullFilename;
+        }
+        private string createKeyFilename(string original)
+        {
+            FileInfo plainFile = new FileInfo(original);
+            int lengthFilename = plainFile.Name.LastIndexOf(".");
+            string keyFilename = plainFile.Name.Substring(0, lengthFilename) + ".mykey";
+            string keyFullFilename =
+                _model.getWorkspacePath() + "\\" + templateFolders[3] + "\\" + keyFilename;
+            return keyFullFilename;
+        }
+
         private bool exportPublicRsaKey()
         {
             try
@@ -280,6 +336,73 @@ namespace EncrpytDecrypt
                 StreamWriter sw = new StreamWriter(fullFileName, false);
                 sw.Write(rsa.ToXmlString(false));
                 sw.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error", e.Message, MessageBoxButtons.AbortRetryIgnore);
+                return false;
+            }
+        }
+
+        private bool encryption(string filePath)
+        {
+            try
+            {
+                //Copy the plain file to the "\\00_Documents" folder 
+                FileInfo plainFile = copyFile(filePath);
+
+                //Load the asymmetric keys and generate the symmetric key and IV
+                RSACryptoServiceProvider asymKeys = _model.getRsaKeys();
+                RijndaelManaged aes = createSymKey();
+
+                //Temporal members
+                byte[] symKey = aes.Key;
+                byte[] symKeyEnc = asymKeys.Encrypt(symKey, false);
+                byte[] symIV = aes.IV;
+                int symKeyEncLen = symKeyEnc.Length;
+                int symIVLen = symIV.Length;
+                byte[] symKeyEncLenWrite = new byte[2];
+                byte[] symIVLenWrite = new byte[2];
+                symKeyEncLenWrite = BitConverter.GetBytes(symKeyEncLen);
+                symIVLenWrite = BitConverter.GetBytes(symIVLen);
+
+                //Generate file names
+                string encryptedFilename = createEncryptedFilenname(plainFile.FullName);
+                string keyFilename = createKeyFilename(plainFile.FullName);
+
+                //Write-FileStream for the key file
+                FileStream keyFile = new FileStream(keyFilename, FileMode.Create);
+                keyFile.Write(symKeyEncLenWrite, 0, 4);
+                keyFile.Write(symIVLenWrite, 0, 4);
+                keyFile.Write(symKeyEnc, 0, symKeyEncLen);
+                keyFile.Write(symIV, 0, symIVLen);
+                keyFile.Close();
+
+                //Write-Filestream for the encrypted file
+                FileStream fsEncryption = new FileStream(encryptedFilename, FileMode.Create);
+
+                //Cryptostream for encryption
+                ICryptoTransform encryptor = aes.CreateEncryptor();
+                CryptoStream csEncryption = new CryptoStream(fsEncryption, encryptor, CryptoStreamMode.Write);
+
+                //Read-Filestream for the plain file
+                FileStream fsPlainFile = new FileStream(plainFile.FullName, FileMode.Open);
+
+                int readBytes = 0;
+                int blockSizeInBytes = aes.BlockSize / 8;
+                byte[] readData = new byte[blockSizeInBytes];
+                do
+                {
+                    readBytes = fsPlainFile.Read(readData, 0, blockSizeInBytes);
+                    csEncryption.Write(readData, 0, readBytes);
+                }
+                while (readBytes > 0);
+                fsPlainFile.Close();
+                csEncryption.FlushFinalBlock();
+                csEncryption.Close();
+                fsEncryption.Close();
+
                 return true;
             }
             catch (Exception e)

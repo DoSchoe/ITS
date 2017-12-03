@@ -15,7 +15,8 @@ namespace EncrpytDecrypt
         #region Members
         private IController _controller;
         public event ViewMainHandler<IViewMain> createRsaKeys;
-        public event ViewMainHandler<IViewMain> exportRsaKey; 
+        public event ViewMainHandler<IViewMain> exportRsaKey;
+        public event FileHandler<IViewMain> encryptFile; 
         #endregion
 
         public ViewMain()
@@ -66,6 +67,14 @@ namespace EncrpytDecrypt
         {
             exportRsaKey.Invoke(this, null);
         }
+        private void bt_encrypt_Click(object sender, EventArgs e)
+        {
+            DialogResult result = ofd_chooseFile.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                encryptFile.Invoke(this, new FileEventArgs(ofd_chooseFile.FileNames[0]));
+            }
+        }
         #endregion
         #endregion
 
@@ -90,7 +99,6 @@ namespace EncrpytDecrypt
         public void publicRsaKeyLoaded(IModel model, ModelEventArgs e)
         {
             bt_decrypt.Enabled = true;
-            bt_encrypt.Enabled = true;
         }
         #endregion
 

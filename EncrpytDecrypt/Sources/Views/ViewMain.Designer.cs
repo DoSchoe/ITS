@@ -40,6 +40,7 @@
             this.tbx_logFile = new System.Windows.Forms.TextBox();
             this.lb_logFile = new System.Windows.Forms.Label();
             this.bt_about = new System.Windows.Forms.Button();
+            this.ofd_chooseFile = new System.Windows.Forms.OpenFileDialog();
             this.tlp_viewMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -141,6 +142,7 @@
             this.bt_encrypt.TabIndex = 3;
             this.bt_encrypt.Text = "Encrypt a file";
             this.bt_encrypt.UseVisualStyleBackColor = true;
+            this.bt_encrypt.Click += new System.EventHandler(this.bt_encrypt_Click);
             // 
             // bt_decrypt
             // 
@@ -242,5 +244,6 @@
         private System.Windows.Forms.TextBox tbx_logFile;
         private System.Windows.Forms.Label lb_logFile;
         private System.Windows.Forms.Button bt_about;
+        private System.Windows.Forms.OpenFileDialog ofd_chooseFile;
     }
 }
