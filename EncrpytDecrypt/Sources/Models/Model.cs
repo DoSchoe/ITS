@@ -2,6 +2,9 @@
 
 namespace EncrpytDecrypt
 {
+    /// <summary>
+    /// Model for the 'EncryptDecrypt' project
+    /// </summary>
     public class Model:IModel
     {
         #region Members

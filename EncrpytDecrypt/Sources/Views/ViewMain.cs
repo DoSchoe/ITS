@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EncrpytDecrypt
@@ -16,9 +9,14 @@ namespace EncrpytDecrypt
         private IController _controller;
         public event ViewMainHandler<IViewMain> createRsaKeys;
         public event ViewMainHandler<IViewMain> exportRsaKey;
-        public event FileHandler<IViewMain> encryptFile; 
+        public event FileHandler<IViewMain> encryptFile;
+        public event FileHandler<IViewMain> decryptFile; 
+        public event ViewMainHandler<IViewMain> deleteAllFiles; 
         #endregion
 
+        /// <summary>
+        /// CTor
+        /// </summary>
         public ViewMain()
         {
             InitializeComponent();
@@ -41,6 +39,15 @@ namespace EncrpytDecrypt
             this.Show();
         }
 
+        /// <summary>
+        /// Updates the log-file
+        /// </summary>
+        /// <param name="msg"></param>
+        public void updateLogFile(string msg)
+        {
+            tbx_logFile.AppendText(msg + "\n");
+        }
+
         #region Form events
         #region General events
         private void bt_close_Click(object sender, EventArgs e)
@@ -58,7 +65,7 @@ namespace EncrpytDecrypt
         }
         #endregion
 
-        #region Main events
+        #region Main view events
         private void bt_createRsaKeys_Click(object sender, EventArgs e)
         {
             createRsaKeys.Invoke(this, null);
@@ -69,18 +76,33 @@ namespace EncrpytDecrypt
         }
         private void bt_encrypt_Click(object sender, EventArgs e)
         {
+            ofd_chooseFile.Filter = "";
             DialogResult result = ofd_chooseFile.ShowDialog();
             if (result == DialogResult.OK)
             {
                 encryptFile.Invoke(this, new FileEventArgs(ofd_chooseFile.FileNames[0]));
             }
         }
+        private void bt_decrypt_Click(object sender, EventArgs e)
+        {
+            ofd_chooseFile.Filter = "enc files (*.enc)|*.enc";
+            DialogResult result = ofd_chooseFile.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                decryptFile.Invoke(this, new FileEventArgs(ofd_chooseFile.FileNames[0]));
+            }
+
+        }
+        private void bt_clearRoot_Click(object sender, EventArgs e)
+        {
+            deleteAllFiles.Invoke(this, null);
+        }
         #endregion
         #endregion
 
         #region Observers
         /// <summary>
-        /// Main view observer for the model
+        /// Log-file observer for the model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="e"></param>
@@ -89,6 +111,11 @@ namespace EncrpytDecrypt
             tbx_logFile.AppendText(e.value + "\n");
         }
 
+        /// <summary>
+        /// Observer if a RSA-key pair is created
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="e"></param>
         public void rsaKeysCreated(IModel model, ModelEventArgs e)
         {
             bt_exportPublicRsaKey.Enabled = true;
@@ -96,15 +123,16 @@ namespace EncrpytDecrypt
             bt_encrypt.Enabled = true;
         }
 
+        /// <summary>
+        /// Observer if a public RSA-key is loaded
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="e"></param>
         public void publicRsaKeyLoaded(IModel model, ModelEventArgs e)
         {
-            bt_decrypt.Enabled = true;
+            //It is not possible to do anything only with the public key!
+            //bt_decrypt.Enabled = true;
         }
         #endregion
-
-        public void updateLogFile(string msg)
-        {
-            tbx_logFile.AppendText(msg + "\n");
-        }
     }
 }

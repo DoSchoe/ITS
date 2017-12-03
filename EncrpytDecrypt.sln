@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncrpytDecrypt", "EncrpytDecrypt\EncrpytDecrypt.csproj", "{8FC03C16-00EC-448B-B4E9-23DF98F9CDAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptDecrypt", "EncrpytDecrypt\EncryptDecrypt.csproj", "{8FC03C16-00EC-448B-B4E9-23DF98F9CDAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

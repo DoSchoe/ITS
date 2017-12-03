@@ -1,14 +1,14 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
-
 namespace EncrpytDecrypt
 {
+    /// <summary>
+    /// Controller for the EncryptDecrypt project
+    /// </summary>
     public class ControllerWorkspace:IController
     {
         #region Members
@@ -39,10 +39,12 @@ namespace EncrpytDecrypt
             _viewWorkspace.workspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.workspaceChoosed);
             _viewWorkspace.newWorkspaceChoosed += new ViewWorkspaceHandler<IViewWorkspace>(this.newWorkspaceChoosed);
 
-            //Mein eventhandler
+            //Main eventhandler
             _viewMain.createRsaKeys += new ViewMainHandler<IViewMain>(this.createRsaKeys);
             _viewMain.exportRsaKey += new ViewMainHandler<IViewMain>(this.exportRsaKey);
             _viewMain.encryptFile += new FileHandler<IViewMain>(this.encryptFile);
+            _viewMain.decryptFile += new FileHandler<IViewMain>(this.decryptFile);
+            _viewMain.deleteAllFiles += new ViewMainHandler<IViewMain>(this.deleteAllFiles);
 
         }
 
@@ -88,20 +90,60 @@ namespace EncrpytDecrypt
             createRsaKeys();
         }
 
+        /// <summary>
+        /// Triggered method if the 'exportRsaKey'-event is fired
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exportRsaKey(IViewMain sender, EventArgs e)
         {
             if (true == exportPublicRsaKey())
             {
-                _viewMain.updateLogFile("Public RSA key exportet.");
+                _viewMain.updateLogFile("Public RSA key exported.");
             }
         }
 
+        /// <summary>
+        /// Triggered method if the 'encryptFile'-event is fired
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">File path of the plain file.</param>
         private void encryptFile(IViewMain sender, FileEventArgs e)
         {
             if (true == encryption(e.filePath))
             {
-                _viewMain.updateLogFile("File encrypted!");
+                string filename = new FileInfo(e.filePath).Name;
+                _viewMain.updateLogFile("File (" + filename + ") encrypted!");
             }
+        }
+
+        /// <summary>
+        /// Triggered method if the 'decryptFile'-event is fired
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e">File path of the encrypted file.</param>
+        private void decryptFile(IViewMain sender, FileEventArgs e)
+        {
+            if (true == decryption(e.filePath))
+            {
+                string filename = new FileInfo(e.filePath).Name;
+                _viewMain.updateLogFile("File (" + filename + ") decrypted");   
+            }
+        }
+
+
+        /// <summary>
+        /// Triggered method if the 'clearWorkspace'-event is fired
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void deleteAllFiles(IViewMain sender, EventArgs e)
+        {
+            if (true == deleteFiles())
+            {
+                _viewMain.updateLogFile("Workspace cleared!");
+            }
+
         }
         #endregion
         #endregion
@@ -163,6 +205,7 @@ namespace EncrpytDecrypt
                 _model.setWorkspacePath(null);
             }
         }
+
         /// <summary>
         /// Checks whether the specified path is a suitable directory.
         /// </summary>
@@ -190,6 +233,7 @@ namespace EncrpytDecrypt
                 _model.setWorkspacePath(null);
             }
         }
+
         /// <summary>
         /// Checks the subfolders of the root folder
         /// </summary>
@@ -243,7 +287,7 @@ namespace EncrpytDecrypt
         }
 
         /// <summary>
-        /// Checks if a file with the public RSA-key exists and loads it
+        /// Checks if a file with the public RSA-key exists and loads it (isn't needed!)
         /// </summary>
         private void checkPublicKeyFile()
         {
@@ -257,7 +301,6 @@ namespace EncrpytDecrypt
                 StreamReader sr = new StreamReader(rsaPublicKeyFiles.Last().FullName);
                 string keytxt = sr.ReadToEnd();
                 rsa.FromXmlString(keytxt);
-                //rsa.PersistKeyInCsp = true;
                 rsa.PersistKeyInCsp = false;
                 sr.Close();
                 _model.loadPublicRsaKey(rsa);
@@ -270,6 +313,9 @@ namespace EncrpytDecrypt
         #endregion
 
         #region Main methods
+        /// <summary>
+        /// Create asymmetric keys
+        /// </summary>
         private void createRsaKeys()
         {
             RSACryptoServiceProvider rsa;
@@ -278,6 +324,10 @@ namespace EncrpytDecrypt
             _model.setRsaKeys(rsa);
         }
 
+        /// <summary>
+        /// Creates symmetric key and intial vector
+        /// </summary>
+        /// <returns>Returns the created RijndaelManged class.</returns>
         private RijndaelManaged createSymKey()
         {
             RijndaelManaged symKey = new RijndaelManaged();
@@ -288,6 +338,11 @@ namespace EncrpytDecrypt
             return symKey;
         }
 
+        /// <summary>
+        /// Copies a selected file to the '00_Documents' folder if it isn't its directory
+        /// </summary>
+        /// <param name="filePath">File path of the original file.</param>
+        /// <returns>Fileinfo of the copied file.</returns>
         private FileInfo copyFile(string filePath)
         {
             FileInfo actualFile = new FileInfo(filePath);
@@ -305,25 +360,66 @@ namespace EncrpytDecrypt
             }
         }
 
-        private string createEncryptedFilenname(string original)
+        /// <summary>
+        /// Creates the file path for the encrypted file
+        /// </summary>
+        /// <param name="originalFile">Fileinfo of the original file.</param>
+        /// <returns>File path and name for the encrypted file.</returns>
+        private string createEncryptedFilenname(FileInfo originalFile)
         {
-            FileInfo plainFile = new FileInfo(original);
-            int lengthFilename = plainFile.Name.LastIndexOf(".");
-            string encryptedFilename = plainFile.Name.Substring(0, lengthFilename) + ".enc";
-            string encryptedFullFilename =
-                _model.getWorkspacePath() + "\\" + templateFolders[1] + "\\" + encryptedFilename;
-            return encryptedFullFilename;
-        }
-        private string createKeyFilename(string original)
-        {
-            FileInfo plainFile = new FileInfo(original);
-            int lengthFilename = plainFile.Name.LastIndexOf(".");
-            string keyFilename = plainFile.Name.Substring(0, lengthFilename) + ".mykey";
-            string keyFullFilename =
-                _model.getWorkspacePath() + "\\" + templateFolders[3] + "\\" + keyFilename;
-            return keyFullFilename;
+            string encryptedFilename = _model.getWorkspacePath() + "\\" + templateFolders[1] + "\\" +
+                                       originalFile.Name + ".enc";
+            return encryptedFilename;
         }
 
+        /// <summary>
+        /// Creates the file path for the key file
+        /// </summary>
+        /// <param name="originalFile">Fileinfo of the original file.</param>
+        /// <returns>File path and name for the key file.</returns>
+        private string createKeyFilename(FileInfo originalFile)
+        {
+            string keyFilename = _model.getWorkspacePath() + "\\" + templateFolders[3] + "\\" +
+                                 originalFile.Name + ".mykey";
+            return keyFilename;
+        }
+
+        /// <summary>
+        /// Creates the file path for the decrypted file
+        /// </summary>
+        /// <param name="encryptedFile">FileInfo of the encrypted file.</param>
+        /// <returns>File path and name for the decrypted file.</returns>
+        private string createDecryptedFilename(FileInfo encryptedFile)
+        {
+            string decryptedFilename = _model.getWorkspacePath() + "\\" + templateFolders[2] + "\\" +
+                                       encryptedFile.Name.Substring(0, encryptedFile.Name.Length - 4);
+            return decryptedFilename;
+        }
+
+        /// <summary>
+        /// Searches the file with the symetric keys for the encrpyted file
+        /// </summary>
+        /// <param name="encryptedFile">FileInfo of the encrypted file.</param>
+        /// <returns>FileInfo of the key file.</returns>
+        private FileInfo searchKeyFile(FileInfo encryptedFile)
+        {
+            string keyFullFilename = _model.getWorkspacePath() + "\\" + templateFolders[3] + "\\" +
+                                 encryptedFile.Name.Substring(0, encryptedFile.Name.Length - 4) + ".mykey";
+            FileInfo keyFile = new FileInfo(keyFullFilename);
+            if (keyFile.Exists)
+            {
+                return keyFile;
+            }
+            else
+            {
+                throw new Exception("No Key-file found for the choosen encrypted file!");
+            }
+        }
+
+        /// <summary>
+        /// Exports the public RSA-key
+        /// </summary>
+        /// <returns>TRUE if the export was succesful.</returns>
         private bool exportPublicRsaKey()
         {
             try
@@ -340,16 +436,74 @@ namespace EncrpytDecrypt
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error", e.Message, MessageBoxButtons.AbortRetryIgnore);
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
                 return false;
             }
         }
 
+        /// <summary>
+        /// Decrypts a file
+        /// </summary>
+        /// <param name="filePath">File path of the encrypted file.</param>
+        /// <returns>TRUE if the decryption was succesful.</returns>
+        private bool decryption(string filePath)
+        {
+            try
+            {
+                FileInfo encryptedFile = new FileInfo(filePath);
+                string decryptedFilename = createDecryptedFilename(encryptedFile);
+                FileInfo keyFile = searchKeyFile(encryptedFile);
+
+                //Reads the symetric key and IV
+                StreamReader readKeyFile = new StreamReader(keyFile.FullName);
+                string symIVString = readKeyFile.ReadLine();
+                string symKeyEncString = readKeyFile.ReadLine();
+                readKeyFile.Close();
+                byte[] symIV = Convert.FromBase64String(symIVString);
+                byte[] symKeyEnc = Convert.FromBase64String(symKeyEncString);
+                byte[] symKey = _model.getRsaKeys().Decrypt(symKeyEnc, false);
+
+                //Creates the decryptor
+                RijndaelManaged aes = createSymKey();
+                ICryptoTransform decryptor = aes.CreateDecryptor(symKey, symIV);
+
+                //Reads the encrypted file
+                FileStream fsEncryptedFile = new FileStream(encryptedFile.FullName, FileMode.Open);
+                FileStream fsDecryption = new FileStream(decryptedFilename,FileMode.Create);
+                CryptoStream csDecryption = new CryptoStream(fsDecryption,decryptor,CryptoStreamMode.Write);
+                int readBytes = 0;
+                int blockSizeInBytes = aes.BlockSize / 8;
+                byte[] readData = new byte[blockSizeInBytes];
+                do
+                {
+                    readBytes = fsEncryptedFile.Read(readData, 0, blockSizeInBytes);
+                    csDecryption.Write(readData, 0, readBytes);
+                }
+                while (readBytes > 0);
+
+                csDecryption.FlushFinalBlock();
+                fsEncryptedFile.Close();
+                fsDecryption.Close();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Encrypts a file
+        /// </summary>
+        /// <param name="filePath">File path of the original file.</param>
+        /// <returns>TRUE if the encryption was succesful.</returns>
         private bool encryption(string filePath)
         {
             try
             {
-                //Copy the plain file to the "\\00_Documents" folder 
+                //Copies the plain file to the '00_Documents' folder 
                 FileInfo plainFile = copyFile(filePath);
 
                 //Load the asymmetric keys and generate the symmetric key and IV
@@ -360,23 +514,16 @@ namespace EncrpytDecrypt
                 byte[] symKey = aes.Key;
                 byte[] symKeyEnc = asymKeys.Encrypt(symKey, false);
                 byte[] symIV = aes.IV;
-                int symKeyEncLen = symKeyEnc.Length;
-                int symIVLen = symIV.Length;
-                byte[] symKeyEncLenWrite = new byte[2];
-                byte[] symIVLenWrite = new byte[2];
-                symKeyEncLenWrite = BitConverter.GetBytes(symKeyEncLen);
-                symIVLenWrite = BitConverter.GetBytes(symIVLen);
+                string symKeyEncString = Convert.ToBase64String(symKeyEnc);
+                string symIVString = Convert.ToBase64String(symIV);
 
                 //Generate file names
-                string encryptedFilename = createEncryptedFilenname(plainFile.FullName);
-                string keyFilename = createKeyFilename(plainFile.FullName);
+                string encryptedFilename = createEncryptedFilenname(plainFile);
+                string keyFilename = createKeyFilename(plainFile);
 
-                //Write-FileStream for the key file
-                FileStream keyFile = new FileStream(keyFilename, FileMode.Create);
-                keyFile.Write(symKeyEncLenWrite, 0, 4);
-                keyFile.Write(symIVLenWrite, 0, 4);
-                keyFile.Write(symKeyEnc, 0, symKeyEncLen);
-                keyFile.Write(symIV, 0, symIVLen);
+                StreamWriter keyFile = new StreamWriter(keyFilename, false);
+                keyFile.WriteLine(symIVString);
+                keyFile.WriteLine(symKeyEncString);
                 keyFile.Close();
 
                 //Write-Filestream for the encrypted file
@@ -386,9 +533,8 @@ namespace EncrpytDecrypt
                 ICryptoTransform encryptor = aes.CreateEncryptor();
                 CryptoStream csEncryption = new CryptoStream(fsEncryption, encryptor, CryptoStreamMode.Write);
 
-                //Read-Filestream for the plain file
+                //Read-Filestream of the plain file
                 FileStream fsPlainFile = new FileStream(plainFile.FullName, FileMode.Open);
-
                 int readBytes = 0;
                 int blockSizeInBytes = aes.BlockSize / 8;
                 byte[] readData = new byte[blockSizeInBytes];
@@ -398,8 +544,9 @@ namespace EncrpytDecrypt
                     csEncryption.Write(readData, 0, readBytes);
                 }
                 while (readBytes > 0);
-                fsPlainFile.Close();
                 csEncryption.FlushFinalBlock();
+
+                fsPlainFile.Close();
                 csEncryption.Close();
                 fsEncryption.Close();
 
@@ -407,10 +554,39 @@ namespace EncrpytDecrypt
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error", e.Message, MessageBoxButtons.AbortRetryIgnore);
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
                 return false;
             }
         }
+
+        /// <summary>
+        /// Delets all files in the workspace
+        /// </summary>
+        /// <returns>TRUE if the deletion was succesful.</returns>
+        private bool deleteFiles()
+        {
+            try
+            {
+                DirectoryInfo workspace = new DirectoryInfo(_model.getWorkspacePath());
+                foreach (DirectoryInfo dir in workspace.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+                foreach (FileInfo file in workspace.GetFiles())
+                {
+                    file.Delete();
+                }
+                createWorkspace(workspace);
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK);
+                return false;
+            }
+            
+        }
+
         #endregion
         #endregion
     }

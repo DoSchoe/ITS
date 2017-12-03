@@ -55,7 +55,6 @@ namespace EncrpytDecrypt
             if (result == DialogResult.OK)
             {
                 workspaceChoosed.Invoke(this, new WorkspaceEventArgs(fbd_chooseWorkspace.SelectedPath));
-                //_controller.chooseWorkspace(fbd_chooseWorkspace.SelectedPath);
             }
         }
 
@@ -66,7 +65,6 @@ namespace EncrpytDecrypt
             if (result == DialogResult.OK)
             {
                 newWorkspaceChoosed.Invoke(this, new WorkspaceEventArgs(fbd_chooseWorkspace.SelectedPath));
-                //_controller.createNewWorkspace(fbd_chooseWorkspace.SelectedPath);
             }
         }
 
@@ -82,7 +80,7 @@ namespace EncrpytDecrypt
 
         #region Observer
         /// <summary>
-        /// Workspace observer for the model
+        /// Observer if a workspace is set
         /// </summary>
         /// <param name="model"></param>
         /// <param name="e"></param>
@@ -90,6 +88,12 @@ namespace EncrpytDecrypt
         {
             tbx_workspace.Text = e.value;
         }
+
+        /// <summary>
+        /// Observer for enabling the OK-button
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="e"></param>
         public void enableOK(IModel model, ModelEventArgs e)
         {
             bt_OK.Enabled = true;

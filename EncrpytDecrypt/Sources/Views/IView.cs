@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Windows.Forms;
 
 namespace EncrpytDecrypt
 {
@@ -22,6 +20,7 @@ namespace EncrpytDecrypt
         event ViewWorkspaceHandler<IViewWorkspace> workspaceChoosed;
         event ViewWorkspaceHandler<IViewWorkspace> newWorkspaceChoosed;
     }
+
     /// <summary>
     /// Eventhandler for the workspace view
     /// </summary>
@@ -42,9 +41,10 @@ namespace EncrpytDecrypt
         event ViewMainHandler<IViewMain> createRsaKeys;
         event ViewMainHandler<IViewMain> exportRsaKey;
         event FileHandler<IViewMain> encryptFile;
+        event FileHandler<IViewMain> decryptFile; 
+        event ViewMainHandler<IViewMain> deleteAllFiles;
     }
     public delegate void ViewMainHandler<IViewMain>(IViewMain sender, EventArgs e);
-
     public delegate void FileHandler<IViewMain>(IViewMain sender, FileEventArgs e);
     #endregion
 

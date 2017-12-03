@@ -156,6 +156,7 @@
             this.bt_decrypt.TabIndex = 4;
             this.bt_decrypt.Text = "Decrypt a file";
             this.bt_decrypt.UseVisualStyleBackColor = true;
+            this.bt_decrypt.Click += new System.EventHandler(this.bt_decrypt_Click);
             // 
             // bt_close
             // 
@@ -179,6 +180,7 @@
             this.bt_clearRoot.TabIndex = 5;
             this.bt_clearRoot.Text = "Clear all files";
             this.bt_clearRoot.UseVisualStyleBackColor = true;
+            this.bt_clearRoot.Click += new System.EventHandler(this.bt_clearRoot_Click);
             // 
             // tbx_logFile
             // 

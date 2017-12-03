@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace EncrpytDecrypt
 {
+    /// <summary>
+    /// Interface for the controller
+    /// </summary>
     public interface IController
     {
         //void chooseWorkspace(string path);
