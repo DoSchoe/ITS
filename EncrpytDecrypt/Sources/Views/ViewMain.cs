@@ -77,6 +77,7 @@ namespace EncrpytDecrypt
         private void bt_encrypt_Click(object sender, EventArgs e)
         {
             ofd_chooseFile.Filter = "";
+            ofd_chooseFile.InitialDirectory = Model.Instance.getWorkspacePath() + "\\00_Documents";
             DialogResult result = ofd_chooseFile.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -86,12 +87,12 @@ namespace EncrpytDecrypt
         private void bt_decrypt_Click(object sender, EventArgs e)
         {
             ofd_chooseFile.Filter = "enc files (*.enc)|*.enc";
+            ofd_chooseFile.InitialDirectory = Model.Instance.getWorkspacePath() + "\\01_Encrypt";
             DialogResult result = ofd_chooseFile.ShowDialog();
             if (result == DialogResult.OK)
             {
                 decryptFile.Invoke(this, new FileEventArgs(ofd_chooseFile.FileNames[0]));
             }
-
         }
         private void bt_clearRoot_Click(object sender, EventArgs e)
         {

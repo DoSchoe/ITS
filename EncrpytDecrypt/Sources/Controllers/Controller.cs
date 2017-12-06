@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -127,7 +128,8 @@ namespace EncrpytDecrypt
             if (true == decryption(e.filePath))
             {
                 string filename = new FileInfo(e.filePath).Name;
-                _viewMain.updateLogFile("File (" + filename + ") decrypted");   
+                _viewMain.updateLogFile("File (" + filename + ") decrypted");
+                Process.Start("explorer.exe", _model.getWorkspacePath() + "\\" + templateFolders[2]);
             }
         }
 
